@@ -1,0 +1,601 @@
+openapi: 3.0.0
+info:
+  title: meal-wallet Organization - Account
+  version: 0.0.1
+  description: |
+    meal-wallet Organization Service is a REST HTTP API for managing meal-wallet organizations. A meal-wallet organization is a account
+    or entity that is registered into the meal-wallet platform ant that uses the meal-wallet platform features.
+    meal-wallet Organization Service exposes REST endpoint for:
+
+    * Creating meal-wallet organizations
+    * Retrieving meal-wallet organization Information
+    * Updating meal-wallet organizations
+
+    # Security
+
+    This service is not publicly accessible. Only the meal-wallet Gateway Service can make calls to its endpoints
+
+    ## Authentication
+
+    Access to the API is controlled by an OpenID token
+    The client needs to request an access token from the oauth2 server. It provides its client id and client secret.
+    Then all requests to the meal-wallet Account User Service must be made over HTTP/HTTPS with this access token
+
+    # Responses
+
+    ## HTTP Response Codes
+    | Status Code | Usage                                                       |
+    |-------------|-------------------------------------------------------------|
+    | 200         | The request completed successfully                          |
+    | 201         | A new resource has been created                             |
+    | 400         | Malformed request                                           |
+    | 401         | Missing access token                                        |
+    | 403         | The client does not have permission to access this resource |
+    | 404         | Resource not found                                          |
+    | 405         | Method not supported                                        |
+    | 500         | Internal server error                                       |
+    | 503         | Service unvailable                                          |
+
+    ## Errors
+    whenever an error occured within the platform, an error response that describes the problem will be returned
+
+    | Field Name        | Field Description     |
+    |-------------------|-----------------------|
+    | Status            | "fail" or "error"     |
+    | StatusCode        | A business error code |
+    | StatusDescription | Error description     |
+
+    ## Error codes
+
+    | Error Code | Error Description                                |
+    |------------|--------------------------------------------------|
+    | 6001       | Can't obtain list of meal-wallet organizations        |
+    | 6010       | Can't create meal-wallet organization                 |
+    | 6020       | meal-wallet organization not found                    |
+    | 6030       | Can't obtain meal-wallet organization data            |
+    | 6040       | Unable to update meal-wallet organization data        |
+    | 6000       | Invalid Request                                  |
+    | 6050       | System Error                                     |
+
+    # Changelog
+
+    ## 2020-12-12
+    * Created .....
+
+    # Useful links
+  termsOfService: 'http://swagger.io/terms/'
+  x-logo:
+    url: '/static/img/meal-wallet_logo.jpeg'
+    backgroundColor: '#FFFFFF'
+    altText: meal-wallet Logo
+servers:
+  - url: 'https://meal-wallet-account-organization-svc-fjhmnd5asa-ew.a.run.app'
+    description: Testing Server
+  - url: 'http://localhost:8020'
+    description: Testing local
+tags:
+  - name: meal-wallet Organizations
+    description: meal-wallet Organizations are used to handle operations on meal-wallet organizations
+    externalDocs:
+      url: 'https://meal-wallet-account-organization-svc-fjhmnd5asa-ew.a.run.app'
+  - name: meal-wallet Accounts
+    description: meal-wallet Accounts are used to handle operations on meal-wallet Accounts
+    externalDocs:
+      url: 'https://meal-wallet-account-organization-svc-fjhmnd5asa-ew.a.run.app'
+
+paths:
+  /v1/organizations:
+    get:
+      summary: Obtain a list of meal-wallet organizations
+      tags:
+        - meal-wallet Organizations
+      responses:
+        '200':
+          description: Successfully obtained list of meal-wallet organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletOrganizations:
+                        $ref: '#/components/schemas/meal-walletOrganizationsWithId'
+
+        '500':
+          description: Error when obtaining list of meal-wallet organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6001
+                statusDescription: Error when obtaining list of meal-wallet organizations
+
+    post:
+      summary: Create a meal-wallet Organization
+      tags:
+        - meal-wallet Organizations
+      requestBody:
+        description: The meal-wallet Organization specification
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meal-walletOrganization'
+      responses:
+        '201':
+          description: Successfully created meal-wallet organization
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletOrganizationWithId:
+                        $ref: '#/components/schemas/meal-walletOrganizationWithId'
+        '500':
+          description: Error when creating meal-wallet organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6010
+                statusDescription: Error when creating meal-wallet organization
+  /v1/organizations/{organizationId}:
+    get:
+      summary: Fetch meal-wallet organization data
+      tags:
+       - meal-wallet Organizations
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6784bbea-ea94-426e-bb64-594eeee6cb03
+      responses:
+        '200':
+          description: Successfully fetched meal-wallet organization data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletOrganization:
+                        $ref: '#/components/schemas/meal-walletOrganizationWithId'
+        '404':
+          description: meal-wallet organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6020
+                statusDescription: meal-wallet organization not found
+        '500':
+          description: Error when fetching meal-wallet organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6021
+                statusDescription: Error when fetching meal-wallet organization
+    patch:
+      summary: Update meal-wallet organization data
+      tags:
+        - meal-wallet Organizations
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6784bbea-ea94-426e-bb64-594eeee6cb03
+      requestBody:
+        description: The meal-wallet organization specification
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meal-walletOrganization'
+      responses:
+        '201':
+          description: Successfully updated meal-wallet organization
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletOrganization:
+                        $ref: '#/components/schemas/meal-walletOrganizationWithId'
+        '500':
+          description: Error when updating the meal-wallet account organization information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 4030
+                statusDescription: Error when updating the meal-wallet account organization information
+  /v1/accounts:
+    get:
+      summary: Obtain a list of meal-wallet accounts
+      tags:
+        - meal-wallet Accounts
+      responses:
+        '200':
+          description: Successfully obtained list of meal-wallet accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletAccounts:
+                        $ref: '#/components/schemas/meal-walletAccountsWithId'
+
+        '500':
+          description: Error when obtaining list of meal-wallet accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6001
+                statusDescription: Error when obtaining list of meal-wallet accounts
+
+    post:
+      summary: Create a meal-wallet account
+      tags:
+        - meal-wallet Accounts
+      requestBody:
+        description: The meal-wallet account specification
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meal-walletAccount'
+      responses:
+        '201':
+          description: Successfully created meal-wallet account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletOrganizationWithId:
+                        $ref: '#/components/schemas/meal-walletAccountWithId'
+        '500':
+          description: Error when creating meal-wallet account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6010
+                statusDescription: Error when creating meal-wallet account
+  /v1/accounts/{accountId}:
+    get:
+      summary: Fetch meal-wallet account data
+      tags:
+       - meal-wallet Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6784bbea594eeee6cb03
+      responses:
+        '200':
+          description: Successfully fetched meal-wallet account data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletOrganization:
+                        $ref: '#/components/schemas/meal-walletAccountWithId'
+        '404':
+          description: meal-wallet account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6020
+                statusDescription: meal-wallet account not found
+        '500':
+          description: Error when fetching meal-wallet account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6021
+                statusDescription: Error when fetching meal-wallet account
+    patch:
+      summary: Update meal-wallet Accounts data
+      tags:
+        - meal-wallet Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6784bbea594eeee6cb03
+      requestBody:
+        description: The meal-wallet account specification
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/meal-walletAccount'
+      responses:
+        '201':
+          description: Successfully updated meal-wallet account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletOrganization:
+                        $ref: '#/components/schemas/meal-walletAccountWithId'
+        '500':
+          description: Error when updating the meal-wallet account account information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 4030
+                statusDescription: Error when updating the meal-wallet account information
+  /v1/accounts/organizations/{organizationId}:
+    get:
+      summary: Obtain a list of meal-wallet accounts
+      tags:
+        - meal-wallet Accounts
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 6784bbea594eeee6cb03
+      responses:
+        '200':
+          description: Successfully obtained list of meal-wallet accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      meal-walletAccounts:
+                        $ref: '#/components/schemas/meal-walletAccountsWithId'
+
+        '500':
+          description: Error when obtaining list of meal-wallet accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: fail
+                statusCode: 6001
+                statusDescription: Error when obtaining list of meal-wallet accounts
+
+components:
+  schemas:
+    ResponseStatus:
+      type: string
+      enum:
+        - success
+        - fail
+        - error
+    ErrorResponseStatus:
+      type: string
+      enum:
+        - fail
+        - error
+    ResponseStatusCode:
+      type: number
+      example: 1023
+    ResponseStatusDescription:
+      type: string
+      example: The meal-wallet plan does not exist within the system
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ErrorResponseStatus'
+        statusCode:
+          $ref: '#/components/schemas/ResponseStatusCode'
+        statusDescription:
+          $ref: '#/components/schemas/ResponseStatusDescription'
+    Address:
+      type: object
+      properties:
+        streetName:
+          type: string
+          example: Rue de la paix
+        streetNumber:
+          type: string
+          example: 201
+        city:
+          type: string
+          example: Paris
+        postCode:
+          type: string
+          example: 75009
+        state:
+          type: string
+          example: Paris
+        country:
+          type: string
+          example: France
+    meal-walletOrganization:
+      type: object
+      properties:
+        name:
+          type: string
+          description: meal-wallet organization name
+          example: meal-wallet
+        address:
+          $ref: '#/components/schemas/Address'
+        email:
+          type: string
+          description: meal-wallet organization email address
+          format: email
+          example: my-email@gmail.com
+        phoneNumber:
+          type: string
+          description: meal-wallet organization phone number
+          example: 00331307568957
+        mobileNumber:
+          type: string
+          description: meal-wallet organization mobile number
+          example: 00336307568957
+        applications:
+          $ref: '#/components/schemas/meal-walletClientApplications'
+    meal-walletOrganizationWithId:
+      allOf:
+        - $ref: '#/components/schemas/meal-walletOrganization'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              description: meal-wallet organization identifier
+              example: 45466ea6b57f53890456
+    meal-walletOrganizations:
+      type: array
+      items:
+        $ref: '#/components/schemas/meal-walletOrganization'
+    meal-walletOrganizationsWithId:
+      type: array
+      items:
+        $ref: '#/components/schemas/meal-walletOrganizationWithId'
+    meal-walletClientApplication:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Application name
+          example: meal-wallet App
+        credentials:
+          type: object
+          properties:
+            oauth2:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                  description: OAuth2 client identifier
+                  example: 1t37i9t15h3rvlib7g1u7odp23
+                clientSecret:
+                  type: string
+                  description: oauth2 client secret
+                  example: avqbjl9vfeo1spfhv5qfp4ojrplg6guf3gv44q1hpvffk6nab8g
+    meal-walletClientApplications:
+      type: array
+      items:
+        $ref: '#/components/schemas/meal-walletClientApplication'
+    meal-walletAccount:
+      type: object
+      properties:
+        name:
+          type: string
+          description: meal-wallet organization name
+          example: meal-wallet
+        address:
+          $ref: '#/components/schemas/Address'
+        email:
+          type: string
+          description: meal-wallet organization email address
+          format: email
+          example: my-email@gmail.com
+        phoneNumber:
+          type: string
+          description: meal-wallet organization phone number
+          example: 00331307568957
+        mobileNumber:
+          type: string
+          description: meal-wallet organization mobile number
+          example: 00336307568957
+    meal-walletaccounts:
+      type: array
+      items:
+        $ref: '#/components/schemas/meal-walletAccount'
+    meal-walletAccountWithId:
+      allOf:
+        - $ref: '#/components/schemas/meal-walletAccount'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              description: meal-wallet Account identifier
+              example: 45466ea6b57f53890456
+    meal-walletAccountsWithId:
+      type: array
+      items:
+        $ref: '#/components/schemas/meal-walletAccountWithId'
+
+

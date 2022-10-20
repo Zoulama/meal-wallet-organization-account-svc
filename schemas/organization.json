@@ -1,0 +1,125 @@
+{
+  "organization_schema": {
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/root.json",
+    "type": "object",
+    "title": "The meal-wallet Organization Schema",
+    "required": [
+      "name",
+      "address",
+      "email",
+      "phoneNumber",
+      "mobileNumber"
+    ],
+    "properties": {
+      "name": {
+        "$id": "#/properties/name",
+        "type": "string",
+        "title": "meal-wallet Name Schema"
+      },
+      "address": {
+        "$id": "#/properties/address",
+        "type": "object",
+        "title": "Address Schema",
+        "required": [
+          "streetName",
+          "streetNumber",
+          "city",
+          "postCode",
+          "state",
+          "country"
+        ],
+        "properties": {
+          "streetName": {
+            "$id": "#/properties/address/properties/streetName",
+            "type": "string",
+            "title": "StreetName Schema",
+            "default": "",
+            "examples": [
+              "Rue de la paix"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "streetNumber": {
+            "$id": "#/properties/address/properties/streetNumber",
+            "type": "integer",
+            "title": "StreetNumber Schema",
+            "default": 0,
+            "examples": [
+              201
+            ]
+          },
+          "city": {
+            "$id": "#/properties/address/properties/city",
+            "type": "string",
+            "title": "City Schema",
+            "examples": [
+              "Paris"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "postCode": {
+            "$id": "#/properties/address/properties/postCode",
+            "type": "string",
+            "title": "PostCode Schema",
+            "default": "",
+            "examples": [
+              "75009"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "state": {
+            "$id": "#/properties/address/properties/state",
+            "type": "string",
+            "title": "State Schema",
+            "examples": [
+              "Paris"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "country": {
+            "$id": "#/properties/address/properties/country",
+            "type": "string",
+            "title": "Country Schema",
+            "default": "",
+            "examples": [
+              "France"
+            ],
+            "pattern": "^(.*)$"
+          }
+        }
+      },
+      "email": {
+        "$id": "#/properties/email",
+        "type": "string",
+        "title": "Email Schema",
+        "default": "",
+        "examples": [
+          "my-email@gmail.com"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "phoneNumber": {
+        "$id": "#/properties/phoneNumber",
+        "type": "string",
+        "title": "PhoneNumber Schema",
+        "default": "",
+        "examples": [
+          "00331307568957"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "mobileNumber": {
+        "$id": "#/properties/mobileNumber",
+        "type": "string",
+        "title": "MobileNumber Schema",
+        "default": "",
+        "examples": [
+          "00336307568957"
+        ],
+        "pattern": "^(.*)$"
+      }
+    }
+  }
+}

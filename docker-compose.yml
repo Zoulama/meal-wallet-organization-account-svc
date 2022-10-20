@@ -1,0 +1,27 @@
+version: '3.2'
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    environment:
+      PORT: 8088
+      DB_MONGO_USERNAME: root
+      DB_MONGO_PASSWORD: meal-wallet
+      DB_MONGO_HOST: db
+      DB_MONGO_PORT: 27017
+      DB_MONGO_URI_SCHEME: mongodb
+      DB_MONGO_DATABASE: meal-walletDB
+    ports:
+      - "8020:8088"
+  db:
+    image: mongo
+    restart: always
+    environment:
+     MONGO_INITDB_ROOT_USERNAME: root
+     MONGO_INITDB_ROOT_PASSWORD: meal-wallet
+    ports:
+      - "27020:27017"
