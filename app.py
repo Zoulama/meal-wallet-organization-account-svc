@@ -12,7 +12,6 @@ from src.domain.account.account_repository import AccountRepository
 from src.domain.account.account_service import AccountService, AccountNotFoundException
 from src.infrastructure.storage.database.mongo_db.mongo_client import MongodbClient
 import config
-
 from error_handler import error_handler
 
 app = Flask(__name__, static_url_path='/static')
